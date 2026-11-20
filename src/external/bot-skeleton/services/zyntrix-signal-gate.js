@@ -19,6 +19,8 @@ export const isValidZyntrixPass = (message, now = Date.now()) => {
     if (message.status !== 'PASS' || message.strategy !== 'OVER1') return false;
     if (message.contract !== 'DIGITOVER' || message.prediction !== 1) return false;
     if (typeof message.signalId !== 'string' || !message.signalId) return false;
+    if (typeof message.sessionId !== 'string' || !message.sessionId) return false;
+    if (!Number.isInteger(message.tickSequence) || message.tickSequence < 1) return false;
     if (!isFiniteNumber(message.timestamp) || now - message.timestamp < 0 || now - message.timestamp > MAX_SIGNAL_AGE_MS) {
         return false;
     }
@@ -43,6 +45,7 @@ class ZyntrixSignalGate {
         this.pending = null;
         this.status = 'NOT_CONNECTED';
         this.seenSignalIds = new Set();
+        this.lastTickSequenceBySession = new Map();
         this.handleMessage = this.handleMessage.bind(this);
         if (typeof window !== 'undefined') {
             window.addEventListener('message', this.handleMessage);
@@ -131,7 +134,11 @@ class ZyntrixSignalGate {
             message.type !== MESSAGE_TYPE ||
             message.version !== PROTOCOL_VERSION ||
             typeof message.signalId !== 'string' ||
-            !message.signalId
+            !message.signalId ||
+            typeof message.sessionId !== 'string' ||
+            !message.sessionId ||
+            !Number.isInteger(message.tickSequence) ||
+            message.tickSequence < 1
         ) {
             return;
         }
@@ -155,6 +162,14 @@ class ZyntrixSignalGate {
             this.setStatus('MARKET_OR_CONTRACT_MISMATCH');
             return;
         }
+
+        const sequenceKey = message.sessionId + ':' + message.market;
+        const previousSequence = this.lastTickSequenceBySession.get(sequenceKey) || 0;
+        if (message.tickSequence <= previousSequence) {
+            this.setStatus('REJECTED_REPLAYED_TICK');
+            return;
+        }
+        this.lastTickSequenceBySession.set(sequenceKey, message.tickSequence);
 
         const { resolve } = this.pending;
         this.pending = null;
