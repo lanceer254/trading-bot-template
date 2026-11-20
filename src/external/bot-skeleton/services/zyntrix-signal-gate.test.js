@@ -6,6 +6,7 @@ const makeSignal = (overrides = {}) => ({
     signalId: 'signal-1',
     sessionId: 'session-1',
     tickSequence: 5,
+    tickEpoch: 11,
     status: 'PASS',
     strategy: 'OVER1',
     contract: 'DIGITOVER',
