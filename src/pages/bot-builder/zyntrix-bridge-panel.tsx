@@ -4,7 +4,9 @@ import './zyntrix-bridge-panel.scss';
 
 const statusLabels: Record<string, string> = {
     NOT_CONNECTED: 'Open Zyntrix analysis to connect.',
-    ANALYSIS_OPEN: 'Zyntrix opened · waiting for live signal.',
+    ANALYSIS_OPEN: 'Zyntrix opened · establishing secure connection.',
+    ANALYSIS_HANDSHAKE: 'Zyntrix handshake received · connecting.',
+    ANALYSIS_CONNECTED: 'Zyntrix connected · live signal channel ready.',
     OPEN_ANALYSIS_FIRST: 'Open Zyntrix analysis before expecting a trade.',
     WAITING_FOR_SIGNAL: 'RUNNING · waiting for a fresh OVER 1 PASS.',
     PASS_CONSUMED: 'Fresh PASS received · DBot may execute one purchase.',
