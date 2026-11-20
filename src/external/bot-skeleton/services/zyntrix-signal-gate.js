@@ -21,6 +21,9 @@ export const isValidZyntrixPass = (message, now = Date.now()) => {
     if (typeof message.signalId !== 'string' || !message.signalId) return false;
     if (typeof message.sessionId !== 'string' || !message.sessionId) return false;
     if (!Number.isInteger(message.tickSequence) || message.tickSequence < 1) return false;
+    if (!isFiniteNumber(message.tickEpoch)) return false;
+    const tickAgeSeconds = now / 1000 - message.tickEpoch;
+    if (tickAgeSeconds < 0 || tickAgeSeconds > 3) return false;
     if (!isFiniteNumber(message.timestamp) || now - message.timestamp < 0 || now - message.timestamp > MAX_SIGNAL_AGE_MS) {
         return false;
     }
@@ -140,7 +143,8 @@ class ZyntrixSignalGate {
             typeof message.market !== 'string' ||
             !message.market ||
             !Number.isInteger(message.tickSequence) ||
-            message.tickSequence < 1
+            message.tickSequence < 1 ||
+            !isFiniteNumber(message.tickEpoch)
         ) {
             return;
         }
