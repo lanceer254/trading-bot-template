@@ -4,6 +4,8 @@ const makeSignal = (overrides = {}) => ({
     type: 'ZYNTRIX_SIGNAL',
     version: 1,
     signalId: 'signal-1',
+    sessionId: 'session-1',
+    tickSequence: 5,
     status: 'PASS',
     strategy: 'OVER1',
     contract: 'DIGITOVER',
