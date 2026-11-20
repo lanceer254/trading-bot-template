@@ -8,6 +8,7 @@ import { getSavedWorkspaces, saveWorkspaceToRecent } from '../utils/local-storag
 import { isDbotRTL } from '../utils/workspace';
 import main_xml from './xml/main.xml';
 import { forgetAccumulatorsProposalRequest } from './accumulators-proposal-handler';
+import { zyntrixSignalGate } from '../services/zyntrix-signal-gate';
 import { loadBlockly } from './blockly';
 import DBotStore from './dbot-store';
 import { isAllRequiredBlocksEnabled, updateDisabledBlocks, validateErrorOnBlockDelete } from './utils';
@@ -273,6 +274,7 @@ class DBot {
         if (api_base.is_stopping) return;
 
         try {
+            zyntrixSignalGate.activate();
             api_base.is_stopping = false;
             const code = this.generateCode();
             if (!this.interpreter.bot.tradeEngine.checkTicksPromiseExists()) this.interpreter = Interpreter();
@@ -373,6 +375,7 @@ class DBot {
      * that trade will be completed first to reflect correct contract status in UI.
      */
     async stopBot() {
+        zyntrixSignalGate.stop();
         if (api_base.is_stopping) return;
 
         api_base.setIsRunning(false);
@@ -389,6 +392,7 @@ class DBot {
      * Immediately instructs the interpreter to terminate the WS connection and bot.
      */
     async terminateBot() {
+        zyntrixSignalGate.stop();
         if (this.interpreter) {
             await this.interpreter.terminateSession();
             this.interpreter = null;

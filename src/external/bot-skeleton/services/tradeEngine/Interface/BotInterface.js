@@ -1,5 +1,6 @@
 import { observer as globalObserver } from '../../../utils/observer';
 import { createDetails } from '../utils/helpers';
+import { zyntrixSignalGate } from '../../zyntrix-signal-gate';
 
 const getBotInterface = tradeEngine => {
     const getDetail = i => createDetails(tradeEngine.data.contract)[i];
@@ -8,7 +9,14 @@ const getBotInterface = tradeEngine => {
         init: (...args) => tradeEngine.init(...args),
         start: (...args) => tradeEngine.start(...args),
         stop: (...args) => tradeEngine.stop(...args),
-        purchase: contract_type => tradeEngine.purchase(contract_type),
+        purchase: async contract_type => {
+            const allowed = await zyntrixSignalGate.waitForPass({
+                market: tradeEngine.symbol || tradeEngine.options?.symbol || tradeEngine.tradeOptions?.symbol,
+                contractType: contract_type,
+            });
+            if (!allowed || !zyntrixSignalGate.isActive()) return null;
+            return tradeEngine.purchase(contract_type);
+        },
         getAskPrice: contract_type => Number(getProposal(contract_type, tradeEngine).ask_price),
         getPayout: contract_type => Number(getProposal(contract_type, tradeEngine).payout),
         getPurchaseReference: () => tradeEngine.getPurchaseReference(),
