@@ -11,7 +11,7 @@ const getBotInterface = tradeEngine => {
         stop: (...args) => tradeEngine.stop(...args),
         purchase: async contract_type => {
             const allowed = await zyntrixSignalGate.waitForPass({
-                market: tradeEngine.options?.symbol || tradeEngine.tradeOptions?.symbol,
+                market: tradeEngine.symbol || tradeEngine.options?.symbol || tradeEngine.tradeOptions?.symbol,
                 contractType: contract_type,
             });
             if (!allowed || !zyntrixSignalGate.isActive()) return null;
