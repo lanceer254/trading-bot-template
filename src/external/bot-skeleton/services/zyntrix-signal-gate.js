@@ -67,9 +67,7 @@ class ZyntrixSignalGate {
             return true;
         }
 
-        const url = new URL(ZYNTRIX_URL);
-        url.searchParams.set('bridgeOrigin', window.location.origin);
-        this.popup = window.open(url.toString(), 'zyntrix-analysis');
+        this.popup = window.open(ZYNTRIX_URL, 'zyntrix-analysis');
 
         if (!this.popup) {
             this.setStatus('POPUP_BLOCKED');
@@ -117,6 +115,15 @@ class ZyntrixSignalGate {
         if (event.origin !== ZYNTRIX_ORIGIN || !this.popup || event.source !== this.popup) return;
 
         const message = event.data;
+        if (message?.type === 'ZYNTRIX_BRIDGE_HELLO' && message.version === PROTOCOL_VERSION) {
+            event.source.postMessage({ type: 'ZYNTRIX_BRIDGE_INIT', version: PROTOCOL_VERSION }, ZYNTRIX_ORIGIN);
+            this.setStatus('ANALYSIS_HANDSHAKE');
+            return;
+        }
+        if (message?.type === 'ZYNTRIX_BRIDGE_READY' && message.version === PROTOCOL_VERSION) {
+            this.setStatus('ANALYSIS_CONNECTED');
+            return;
+        }
         if (
             !message ||
             message.type !== MESSAGE_TYPE ||
