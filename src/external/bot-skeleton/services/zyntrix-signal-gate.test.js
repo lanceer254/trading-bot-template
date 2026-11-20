@@ -32,6 +32,10 @@ describe('Zyntrix PASS validation', () => {
         expect(isValidZyntrixPass(makeSignal(), 14001)).toBe(false);
     });
 
+    it('rejects a fresh message carrying an old market tick', () => {
+        expect(isValidZyntrixPass(makeSignal({ tickEpoch: 8 }), 12000)).toBe(false);
+    });
+
     it('rejects a signal timestamped in the future', () => {
         expect(isValidZyntrixPass(makeSignal(), 9999)).toBe(false);
     });
