@@ -15,7 +15,7 @@ Signals expire after 3 seconds. A PASS that arrives before DBot is actively wait
 
 ## Deploy order
 
-The DBot changes are in this fork's `zyntrix-signal-bridge` branch. The Zyntrix signal publisher is in `lanceer254/mirror` branch `zyntrix-dbot-foundation`. Merge/deploy the Zyntrix change to GitHub Pages before expecting the popup to send bridge messages. Deploy this DBot fork separately to a supported static host.
+The DBot changes are in this fork's `zyntrix-signal-bridge` branch. The Zyntrix signal publisher is in `lanceer254/mirror` branch `zyntrix-dbot-bridge-v2`. Merge/deploy the Zyntrix change to GitHub Pages before expecting the popup to send bridge messages. Deploy this DBot fork separately to a supported static host.
 
 The Deriv white-label template also requires its own Deriv OAuth client ID and redirect URI for the deployed domain. Configure that through the host's environment settings; never commit account tokens or secrets.
 
