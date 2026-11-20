@@ -14,7 +14,7 @@ const getBotInterface = tradeEngine => {
                 market: tradeEngine.options?.symbol || tradeEngine.tradeOptions?.symbol,
                 contractType: contract_type,
             });
-            if (!allowed) return null;
+            if (!allowed || !zyntrixSignalGate.isActive()) return null;
             return tradeEngine.purchase(contract_type);
         },
         getAskPrice: contract_type => Number(getProposal(contract_type, tradeEngine).ask_price),
