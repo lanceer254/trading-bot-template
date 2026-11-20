@@ -13,6 +13,7 @@ const statusLabels: Record<string, string> = {
     STOPPED: 'Bot stopped · signal wait cancelled.',
     POPUP_BLOCKED: 'Popup blocked · allow popups and try again.',
     REJECTED_STALE_OR_INVALID: 'Signal rejected · stale or invalid data.',
+    REJECTED_REPLAYED_TICK: 'Signal rejected · this live tick was already used.',
     MARKET_OR_CONTRACT_MISMATCH: 'Signal rejected · check the market and DIGIT OVER contract.',
 };
 
