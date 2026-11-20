@@ -8,6 +8,7 @@ import { useDevice } from '@deriv-com/ui';
 /* [/AI] */
 import ToolbarButton from './toolbar-button';
 import WorkspaceGroup from './workspace-group';
+import ZyntrixBridgePanel from '../zyntrix-bridge-panel';
 
 const Toolbar = observer(() => {
     const { run_panel, toolbar, quick_strategy } = useStore();
@@ -38,6 +39,7 @@ const Toolbar = observer(() => {
                     )}
                     {isDesktop && <WorkspaceGroup />}
                 </div>
+                <ZyntrixBridgePanel />
             </div>
             {!isDesktop && <WorkspaceGroup />}
             <Dialog
