@@ -1,0 +1,64 @@
+.zyntrix-bridge-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 10px 14px;
+    padding: 10px 14px;
+    border: 1px solid var(--border-normal, #d6dadb);
+    border-radius: 8px;
+    background: var(--general-section-1, #fff);
+    color: var(--text-prominent, #333);
+    font-size: 12px;
+}
+
+.zyntrix-bridge-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.zyntrix-bridge-copy strong {
+    font-size: 11px;
+    letter-spacing: .08em;
+}
+
+.zyntrix-bridge-copy span,
+.zyntrix-bridge-copy small {
+    color: var(--text-less-prominent, #666);
+    line-height: 1.4;
+}
+
+.zyntrix-bridge-copy small {
+    font-weight: 600;
+}
+
+.zyntrix-bridge-open {
+    flex: none;
+    min-height: 34px;
+    padding: 7px 12px;
+    border: 1px solid var(--button-primary-default, #ff444f);
+    border-radius: 5px;
+    background: var(--button-primary-default, #ff444f);
+    color: var(--text-colored-background, #fff);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+}
+
+.zyntrix-bridge-open:focus-visible {
+    outline: 2px solid var(--text-prominent, #333);
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+    .zyntrix-bridge-panel {
+        align-items: stretch;
+        flex-direction: column;
+        margin: 8px;
+    }
+    .zyntrix-bridge-open {
+        width: 100%;
+    }
+}
