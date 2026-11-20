@@ -88,8 +88,12 @@ class ZyntrixSignalGate {
     activate() {
         this.active = true;
         // RUN is triggered by a user click, so open the analysis window synchronously here.
-        if (!this.popup || this.popup.closed) this.openAnalysisWindow();
-        this.setStatus(this.popup && !this.popup.closed ? 'WAITING_FOR_SIGNAL' : 'OPEN_ANALYSIS_FIRST');
+        if ((!this.popup || this.popup.closed) && !this.openAnalysisWindow()) return;
+        this.setStatus('WAITING_FOR_SIGNAL');
+    }
+
+    isActive() {
+        return this.active;
     }
 
     stop() {
