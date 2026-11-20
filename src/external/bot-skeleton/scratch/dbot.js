@@ -272,9 +272,9 @@ class DBot {
      */
     runBot() {
         if (api_base.is_stopping) return;
-        zyntrixSignalGate.activate();
 
         try {
+            zyntrixSignalGate.activate();
             api_base.is_stopping = false;
             const code = this.generateCode();
             if (!this.interpreter.bot.tradeEngine.checkTicksPromiseExists()) this.interpreter = Interpreter();
