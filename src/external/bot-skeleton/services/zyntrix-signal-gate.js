@@ -137,6 +137,8 @@ class ZyntrixSignalGate {
             !message.signalId ||
             typeof message.sessionId !== 'string' ||
             !message.sessionId ||
+            typeof message.market !== 'string' ||
+            !message.market ||
             !Number.isInteger(message.tickSequence) ||
             message.tickSequence < 1
         ) {
@@ -145,6 +147,14 @@ class ZyntrixSignalGate {
 
         if (this.seenSignalIds.has(message.signalId)) return;
         this.rememberSignal(message.signalId);
+
+        const sequenceKey = message.sessionId + ':' + message.market;
+        const previousSequence = this.lastTickSequenceBySession.get(sequenceKey) || 0;
+        if (message.tickSequence <= previousSequence) {
+            this.setStatus('REJECTED_REPLAYED_TICK');
+            return;
+        }
+        this.lastTickSequenceBySession.set(sequenceKey, message.tickSequence);
 
         if (message.status === 'WAIT') {
             this.setStatus('WAITING_FOR_SIGNAL');
@@ -162,14 +172,6 @@ class ZyntrixSignalGate {
             this.setStatus('MARKET_OR_CONTRACT_MISMATCH');
             return;
         }
-
-        const sequenceKey = message.sessionId + ':' + message.market;
-        const previousSequence = this.lastTickSequenceBySession.get(sequenceKey) || 0;
-        if (message.tickSequence <= previousSequence) {
-            this.setStatus('REJECTED_REPLAYED_TICK');
-            return;
-        }
-        this.lastTickSequenceBySession.set(sequenceKey, message.tickSequence);
 
         const { resolve } = this.pending;
         this.pending = null;
